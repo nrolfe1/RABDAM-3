@@ -71,7 +71,7 @@ class StructureMetadata:
 class StructureData:
     """Structure data passed from the input layer to later RABDAM stages."""
 
-    atoms: list[AtomRecord]
+    atoms: tuple[AtomRecord, ...]
     metadata: StructureMetadata
 
 
@@ -123,7 +123,7 @@ def read_structure(resolved_input: ResolvedStructureInput) -> StructureData:
     )
 
     return StructureData(
-        atoms=atoms,
+        atoms=tuple(atoms),
         metadata=metadata,
     )
 
