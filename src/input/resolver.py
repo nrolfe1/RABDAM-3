@@ -24,7 +24,7 @@ from pathlib import Path
 
 
 class InputResolutionError(ValueError):
-    """Raised when RABDAM 3 cannot understand or resolve a structure input."""
+    """Raised when RABDAM cannot understand or resolve a structure input."""
 
 
 class StructureSourceType(str, Enum):

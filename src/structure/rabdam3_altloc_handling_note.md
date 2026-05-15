@@ -37,29 +37,6 @@ Suggested future behavior:
 - Keep atoms whose altloc label matches the selected residue conformer.
 - Discard atoms belonging to other altloc labels.
 
-## Suggested configuration design
-
-Use an explicit strategy option:
-
-```text
-altloc_strategy = "atom_site"   # RABDAM 2-compatible behavior
-altloc_strategy = "residue"     # future residue-coherent behavior
-```
-
-For the initial RABDAM 3 release or validation phase, default to:
-
-```text
-altloc_strategy = "atom_site"
-```
-
-Once RABDAM 2 parity has been established, consider changing the default to:
-
-```text
-altloc_strategy = "residue"
-```
-
-while keeping `"atom_site"` available as a legacy/reproducibility option.
-
 ## Implementation note
 
 Document this as an intentional compatibility choice, not as the final preferred behavior. The long-term goal should be to preserve RABDAM 2 reproducibility while offering a more chemically coherent altloc-selection mode in RABDAM 3.

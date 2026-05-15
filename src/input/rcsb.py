@@ -20,7 +20,7 @@ RCSB_MMCIF_DOWNLOAD_URL = "https://files.rcsb.org/download/{structure_id}.cif"
 
 
 class RcsbDownloadError(InputResolutionError):
-    """Raised when RABDAM 3 cannot download a structure from RCSB."""
+    """Raised when RABDAM cannot download a structure from RCSB."""
 
 
 class RcsbBatchDownloadError(RcsbDownloadError):

@@ -20,7 +20,7 @@ from input.resolver import (
 
 
 class StructureReadError(InputResolutionError):
-    """Raised when RABDAM 3 cannot read a local structure file."""
+    """Raised when RABDAM cannot read a local structure file."""
 
 
 @dataclass(frozen=True)
