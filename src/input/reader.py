@@ -250,9 +250,9 @@ def _get_record_type(residue: gemmi.Residue) -> str:
     Gemmi stores this information at residue level through het_flag.
     """
 
-    het_flag = getattr(residue, "het_flag", "")
+    het_flag = str(getattr(residue, "het_flag", "")).strip().upper()
 
-    if str(het_flag).strip():
+    if het_flag == "H":
         return "HETATM"
 
     return "ATOM"
