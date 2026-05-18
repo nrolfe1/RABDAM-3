@@ -133,6 +133,39 @@ class CrystalSymmetryTests(unittest.TestCase):
             ),
         )
 
+    def test_expands_non_orthogonal_unit_cell(self) -> None:
+        metadata = make_metadata(
+            space_group="P 21 21 21",
+            unit_cell_a=10.0,
+            unit_cell_b=12.0,
+            unit_cell_c=14.0,
+            unit_cell_alpha=90.0,
+            unit_cell_beta=100.0,
+            unit_cell_gamma=90.0,
+        )
+        atom = make_prepared_atom(x=1.0, y=2.0, z=3.0)
+
+        expanded = expand_atoms_by_symmetry(atoms=(atom,), metadata=metadata)
+
+        cell = gemmi.UnitCell(10.0, 12.0, 14.0, 90.0, 100.0, 90.0)
+        fractional = cell.fractionalize(gemmi.Position(1.0, 2.0, 3.0))
+        operation = gemmi.Op("-x+1/2,-y,z+1/2")
+        transformed = operation.apply_to_xyz(
+            [fractional.x, fractional.y, fractional.z]
+        )
+        expected = cell.orthogonalize(
+            gemmi.Fractional(
+                float(transformed[0]),
+                float(transformed[1]),
+                float(transformed[2]),
+            )
+        )
+
+        self.assert_coordinates_almost_equal(
+            (coordinates_as_tuples(expanded)[1],),
+            ((expected.x, expected.y, expected.z),),
+        )
+
     def test_applies_operation_without_wrapping_values_into_unit_cell(self) -> None:
         transformed = apply_operation_without_wrapping(
             gemmi.Op("x+1,y,z"),
