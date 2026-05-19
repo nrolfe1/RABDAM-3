@@ -14,6 +14,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 from dataclasses import dataclass
+import math
 
 from crystal.translate import TranslatedAtom
 from crystal.trim import TrimmedCrystalBlock
@@ -105,9 +106,12 @@ def calculate_packing_density(
     Count neighbour atoms within packing_density_threshold of each selected atom.
     """
 
-    if packing_density_threshold <= 0:
+    if (
+        not math.isfinite(packing_density_threshold)
+        or packing_density_threshold <= 0
+    ):
         raise PackingDensityError(
-            "packing_density_threshold must be positive, "
+            "packing_density_threshold must be a finite positive number, "
             f"got {packing_density_threshold!r}."
         )
 
@@ -160,9 +164,10 @@ def count_neighbours_within_threshold_squared(
     the same inclusion result as comparing true Euclidean distances.
     """
 
-    if threshold_squared < 0:
+    if not math.isfinite(threshold_squared) or threshold_squared < 0:
         raise PackingDensityError(
-            f"threshold_squared must be non-negative, got {threshold_squared!r}."
+            "threshold_squared must be a finite non-negative number, "
+            f"got {threshold_squared!r}."
         )
 
     selected_x = selected_atom.record.x

@@ -1,4 +1,5 @@
 from pathlib import Path
+import math
 import unittest
 
 from crystal.symmetry import UnitCellParameters
@@ -247,6 +248,26 @@ class PackingDensityTests(unittest.TestCase):
                 packing_density_threshold=0.0,
             )
 
+        with self.assertRaises(PackingDensityError):
+            calculate_packing_density(
+                selected_atoms=(make_prepared_atom(source_atom_index=0, x=0.0, y=0.0, z=0.0),),
+                neighbour_atoms=(make_translated_atom(translated_atom_index=1, x=0.0, y=0.0, z=0.0),),
+                packing_density_threshold=-1.0,
+            )
+
+    def test_non_finite_threshold_raises(self) -> None:
+        selected_atoms = (make_prepared_atom(source_atom_index=0, x=0.0, y=0.0, z=0.0),)
+        neighbour_atoms = (make_translated_atom(translated_atom_index=1, x=0.0, y=0.0, z=0.0),)
+
+        for threshold in (math.nan, math.inf, -math.inf):
+            with self.subTest(threshold=threshold):
+                with self.assertRaises(PackingDensityError):
+                    calculate_packing_density(
+                        selected_atoms=selected_atoms,
+                        neighbour_atoms=neighbour_atoms,
+                        packing_density_threshold=threshold,
+                    )
+
     def test_empty_selected_atoms_raises(self) -> None:
         with self.assertRaises(PackingDensityError):
             calculate_packing_density(
@@ -270,6 +291,16 @@ class PackingDensityTests(unittest.TestCase):
                 neighbour_atoms=(),
                 threshold_squared=-1.0,
             )
+
+    def test_non_finite_threshold_squared_raises(self) -> None:
+        for threshold_squared in (math.nan, math.inf, -math.inf):
+            with self.subTest(threshold_squared=threshold_squared):
+                with self.assertRaises(PackingDensityError):
+                    count_neighbours_within_threshold_squared(
+                        selected_atom=make_prepared_atom(source_atom_index=0, x=0.0, y=0.0, z=0.0),
+                        neighbour_atoms=(),
+                        threshold_squared=threshold_squared,
+                    )
 
 
 if __name__ == "__main__":
